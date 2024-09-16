@@ -76,13 +76,13 @@ const EventCalendar = () => {
   }; 
  
   return ( 
-    <Box className="bg-[#f2ce8b] p-4 min-h-screen"> 
+    <Box className="bg-[#f6c15f] p-4 min-h-screen"> 
       <Typography variant="h4" className="text-[#8B4513] font-bold mb-6"> 
         Upcoming Philatelic Events 
       </Typography> 
       <List> 
         {events.map((event) => ( 
-          <ListItem button key={event.id} onClick={() => openBookingModal(event)} className="bg-[#FAEBD7] p-4 my-2 rounded-md shadow hover:bg-[#DAA520] hover:text-white transition-all">
+          <ListItem button key={event.id} onClick={() => openBookingModal(event)} className="bg-[#FAEBD7] p-4 my-2 rounded-md shadow hover:bg-yellow-200 hover:text-white transition-all">
             <ListItemText 
               primary={event.name} 
               secondary={`${event.description} - ${format(parseISO(event.date), 'MMMM d, yyyy')}`} 
