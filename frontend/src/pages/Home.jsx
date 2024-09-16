@@ -16,6 +16,7 @@ import {
 } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Search, Notifications, AccountCircle } from '@mui/icons-material';
+import Footer from '../components/Footer';
 
 const theme = createTheme({
   palette: {
@@ -268,7 +269,6 @@ const Home = () => {
     <ThemeProvider theme={theme}>
       <Box sx={{ flexGrow: 1, bgcolor: 'background.default', minHeight: '100vh' }}>
         <BodyContent />
-        <Footer />
       </Box>
     </ThemeProvider>
   );
