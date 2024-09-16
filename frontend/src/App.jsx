@@ -8,6 +8,9 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import PhilatelicItemUpload from './pages/Upload';
 import FormFill from './pages/FormFill';
+import Events from './Events';
+
+import EventCalendar from './EventCalendar';
 import Login from './pages/Login';
 
 // Initialize Firebase
@@ -36,6 +39,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/upload" element={<PhilatelicItemUpload />} />
         <Route path="/fill" element={<FormFill />} />
+        <Route path="/events" element={<Events />} />
+        <Route path="/cal" element={<EventCalendar />} />
       </Routes>
       <Footer />
     </Router>
