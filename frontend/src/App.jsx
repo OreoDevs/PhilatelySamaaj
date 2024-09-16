@@ -9,6 +9,9 @@ import Footer from './components/Footer';
 import PhilatelicItemUpload from './pages/Upload';
 import FormFill from './pages/FormFill';
 import { Login } from '@mui/icons-material';
+import Events from './Events';
+
+import EventCalendar from './EventCalendar';
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -36,6 +39,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/upload" element={<PhilatelicItemUpload />} />
         <Route path="/fill" element={<FormFill />} />
+        <Route path="/events" element={<Events />} />
+        <Route path="/cal" element={<EventCalendar />} />
       </Routes>
       <Footer />
     </Router>
