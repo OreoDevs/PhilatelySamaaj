@@ -2,7 +2,90 @@ import React, { useState, useEffect } from 'react';
 import { getAuth } from 'firebase/auth';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
-import { app } from '../firebase/firebaseConfig'
+import { app } from '../firebase/firebaseConfig';
+import { 
+  Box, 
+  Button, 
+  TextField, 
+  Typography, 
+  Container, 
+  CssBaseline,
+  Paper,
+  Grid,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Checkbox,
+  FormControlLabel
+} from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { motion } from 'framer-motion';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#8B4513', // Saddle Brown
+    },
+    secondary: {
+      main: '#DAA520', // Goldenrod
+    },
+    background: {
+      default: '#FDF5E6', // Old Lace
+      paper: '#FAEBD7', // Antique White
+    },
+  },
+  typography: {
+    fontFamily: '"Courier New", Courier, monospace',
+    fontSize: 16,
+    h1: {
+      fontFamily: '"Playfair Display", serif',
+      fontSize: '3.5rem',
+    },
+    h2: {
+      fontFamily: '"Playfair Display", serif',
+      fontSize: '3rem',
+    },
+    h3: {
+      fontFamily: '"Playfair Display", serif',
+      fontSize: '2.5rem',
+    },
+    h5: {
+      fontSize: '1.5rem',
+    },
+    body1: {
+      fontSize: '1.1rem',
+    },
+    body2: {
+      fontSize: '1rem',
+    },
+  },
+});
+
+const StyledPaper = styled(Paper)(({ theme }) => ({
+  marginTop: theme.spacing(8),
+  marginBottom: theme.spacing(8),
+  padding: theme.spacing(4),
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  background: theme.palette.background.paper,
+  boxShadow: '0 8px 32px 0 rgba(139, 69, 19, 0.37)',
+  borderRadius: '15px',
+  border: '1px solid rgba(218, 165, 32, 0.18)',
+}));
+
+const StyledButton = styled(Button)(({ theme }) => ({
+  margin: theme.spacing(3, 0, 2),
+  background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
+  borderRadius: 3,
+  border: 0,
+  color: 'white',
+  height: 48,
+  padding: '0 30px',
+  boxShadow: `0 3px 5px 2px ${theme.palette.primary.main}33`,
+}));
 
 function PhilatelicItemUpload() {
   const [itemName, setItemName] = useState('');
@@ -15,8 +98,13 @@ function PhilatelicItemUpload() {
   const [acquisitionDate, setAcquisitionDate] = useState('');
   const [collectionLocation, setCollectionLocation] = useState('');
   const [userId, setUserId] = useState('');
+  const [catalogNumber, setCatalogNumber] = useState('');
+  const [denomination, setDenomination] = useState('');
+  const [yearOfIssue, setYearOfIssue] = useState('');
+  const [countryOfOrigin, setCountryOfOrigin] = useState('');
+  const [certificateOfAuthenticity, setCertificateOfAuthenticity] = useState(false);
+  const [expertVerification, setExpertVerification] = useState(false);
 
-  // Get the authenticated user's UID and set it as userId
   useEffect(() => {
     const auth = getAuth(app);
     const user = auth.currentUser;
@@ -43,10 +131,7 @@ function PhilatelicItemUpload() {
       const storageRef = ref(storage, `philatelic_items/${Date.now()}_${itemImage.name}`);
 
       try {
-        // Upload image
         await uploadBytes(storageRef, itemImage);
-
-        // Get download URL
         itemPicURL = await getDownloadURL(storageRef);
       } catch (error) {
         console.error('Error uploading image:', error);
@@ -65,11 +150,16 @@ function PhilatelicItemUpload() {
         description,
         acquisitionDate: new Date(acquisitionDate),
         collectionLocation,
-        userId, // Authenticated user's UID
+        userId,
+        catalogNumber,
+        denomination,
+        yearOfIssue,
+        countryOfOrigin,
+        certificateOfAuthenticity,
+        expertVerification,
         createdAt: new Date(),
       };
 
-      // Save item info to Firestore
       await addDoc(collection(db, 'philatelicItems'), itemData);
       alert('Philatelic item uploaded successfully');
 
@@ -83,136 +173,210 @@ function PhilatelicItemUpload() {
       setDescription('');
       setAcquisitionDate('');
       setCollectionLocation('');
+      setCatalogNumber('');
+      setDenomination('');
+      setYearOfIssue('');
+      setCountryOfOrigin('');
+      setCertificateOfAuthenticity(false);
+      setExpertVerification(false);
     } catch (error) {
       console.error('Error uploading item:', error);
     }
   };
 
   return (
-    <div className="w-screen h-screen bg-gradient-to-r from-gray-200 to-yellow-800">
-      <div className="max-w-xl mx-auto p-8 bg-white shadow-lg rounded-lg mb-10">
-        <h2 className="text-3xl font-semibold text-gray-800 mb-8 text-center">Upload Your Philatelic Item</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-gray-700 font-medium mb-2" htmlFor="itemName">
-                Item Name
-              </label>
-              <input
-                type="text"
-                id="itemName"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="Enter item name"
-                value={itemName}
-                onChange={(e) => setItemName(e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="block text-gray-700 font-medium mb-2" htmlFor="itemCategory">
-                Item Category
-              </label>
-              <select
-                id="itemCategory"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                value={itemCategory}
-                onChange={(e) => setItemCategory(e.target.value)}
+    <ThemeProvider theme={theme}>
+      <Container component="main" maxWidth="md">
+        <CssBaseline />
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <StyledPaper>
+            <Typography component="h1" variant="h4" sx={{ fontFamily: '"Playfair Display", serif', marginBottom: 4 }}>
+              Upload Your Philatelic Item
+            </Typography>
+            <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
+              <Grid container spacing={3}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="itemName"
+                    label="Item Name"
+                    name="itemName"
+                    value={itemName}
+                    onChange={(e) => setItemName(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <FormControl fullWidth>
+                    <InputLabel id="item-category-label">Item Category</InputLabel>
+                    <Select
+                      labelId="item-category-label"
+                      id="itemCategory"
+                      value={itemCategory}
+                      label="Item Category"
+                      onChange={(e) => setItemCategory(e.target.value)}
+                    >
+                      <MenuItem value="stamps">Stamps</MenuItem>
+                      <MenuItem value="covers">Covers</MenuItem>
+                      <MenuItem value="postmarks">Postmarks</MenuItem>
+                      <MenuItem value="other">Other</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="itemCondition"
+                    label="Item Condition"
+                    name="itemCondition"
+                    value={itemCondition}
+                    onChange={(e) => setItemCondition(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="itemPrice"
+                    label="Item Price (₹)"
+                    name="itemPrice"
+                    type="number"
+                    value={itemPrice}
+                    onChange={(e) => setItemPrice(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="catalogNumber"
+                    label="Catalog Number"
+                    name="catalogNumber"
+                    value={catalogNumber}
+                    onChange={(e) => setCatalogNumber(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="denomination"
+                    label="Denomination"
+                    name="denomination"
+                    value={denomination}
+                    onChange={(e) => setDenomination(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="yearOfIssue"
+                    label="Year of Issue"
+                    name="yearOfIssue"
+                    type="number"
+                    value={yearOfIssue}
+                    onChange={(e) => setYearOfIssue(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="countryOfOrigin"
+                    label="Country of Origin"
+                    name="countryOfOrigin"
+                    value={countryOfOrigin}
+                    onChange={(e) => setCountryOfOrigin(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="description"
+                    label="Item Description"
+                    name="description"
+                    multiline
+                    rows={4}
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="acquisitionDate"
+                    label="Date of Acquisition"
+                    name="acquisitionDate"
+                    type="date"
+                    InputLabelProps={{ shrink: true }}
+                    value={acquisitionDate}
+                    onChange={(e) => setAcquisitionDate(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="collectionLocation"
+                    label="Collection Location"
+                    name="collectionLocation"
+                    value={collectionLocation}
+                    onChange={(e) => setCollectionLocation(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <input
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    id="itemImage"
+                    type="file"
+                    onChange={handleImageChange}
+                  />
+                  <label htmlFor="itemImage">
+                    <Button variant="contained" component="span">
+                      Upload Image
+                    </Button>
+                  </label>
+                  {imageURL && (
+                    <Box mt={2}>
+                      <img src={imageURL} alt="Preview" style={{ maxWidth: '100%', maxHeight: '200px' }} />
+                    </Box>
+                  )}
+                </Grid>
+                <Grid item xs={12}>
+                  <FormControlLabel
+                    control={<Checkbox checked={certificateOfAuthenticity} onChange={(e) => setCertificateOfAuthenticity(e.target.checked)} />}
+                    label="Certificate of Authenticity Available"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <FormControlLabel
+                    control={<Checkbox checked={expertVerification} onChange={(e) => setExpertVerification(e.target.checked)} />}
+                    label="Expert Verification Available"
+                  />
+                </Grid>
+              </Grid>
+              <StyledButton
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
               >
-                <option value="">Select a category</option>
-                <option value="stamps">Stamps</option>
-                <option value="covers">Covers</option>
-                <option value="postmarks">Postmarks</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-gray-700 font-medium mb-2" htmlFor="itemPrice">
-                Item Price (₹)
-              </label>
-              <input
-                type="number"
-                id="itemPrice"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="Enter item price"
-                value={itemPrice}
-                onChange={(e) => setItemPrice(e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="block text-gray-700 font-medium mb-2" htmlFor="itemCondition">
-                Item Condition
-              </label>
-              <input
-                type="text"
-                id="itemCondition"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="Enter item condition"
-                value={itemCondition}
-                onChange={(e) => setItemCondition(e.target.value)}
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-gray-700 font-medium mb-2" htmlFor="itemImage">
-                Upload Image
-              </label>
-              <input
-                type="file"
-                id="itemImage"
-                className="w-full border border-gray-300 rounded-lg py-2"
-                accept="image/*"
-                onChange={handleImageChange}
-              />
-            </div>
-          </div>
-          <div>
-            <label className="block text-gray-700 font-medium mb-2" htmlFor="description">
-              Item Description
-            </label>
-            <textarea
-              id="description"
-              className="w-full h-32 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              placeholder="Enter a detailed description of the item"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 font-medium mb-2" htmlFor="acquisitionDate">
-              Date of Acquisition
-            </label>
-            <input
-              type="datetime-local"
-              id="acquisitionDate"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              value={acquisitionDate}
-              onChange={(e) => setAcquisitionDate(e.target.value)}
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 font-medium mb-2" htmlFor="collectionLocation">
-              Collection Location
-            </label>
-            <input
-              type="text"
-              id="collectionLocation"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              placeholder="Enter the collection location"
-              value={collectionLocation}
-              onChange={(e) => setCollectionLocation(e.target.value)}
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          >
-            Upload Philatelic Item
-          </button>
-        </form>
-      </div>
-    </div>
+                Upload Philatelic Item
+              </StyledButton>
+            </Box>
+          </StyledPaper>
+        </motion.div>
+      </Container>
+    </ThemeProvider>
   );
 }
 

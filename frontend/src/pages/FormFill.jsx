@@ -1,6 +1,90 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { auth, db, storage } from '../firebase/firebaseConfig'
+import { auth, db } from '../firebase/firebaseConfig';
+import { 
+  Box, 
+  Button, 
+  TextField, 
+  Typography, 
+  Container, 
+  CssBaseline,
+  Paper,
+  Grid,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Checkbox,
+  FormControlLabel,
+  FormGroup
+} from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { motion } from 'framer-motion';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#8B4513', // Saddle Brown
+    },
+    secondary: {
+      main: '#DAA520', // Goldenrod
+    },
+    background: {
+      default: '#FDF5E6', // Old Lace
+      paper: '#FAEBD7', // Antique White
+    },
+  },
+  typography: {
+    fontFamily: '"Courier New", Courier, monospace',
+    fontSize: 16,
+    h1: {
+      fontFamily: '"Playfair Display", serif',
+      fontSize: '3.5rem',
+    },
+    h2: {
+      fontFamily: '"Playfair Display", serif',
+      fontSize: '3rem',
+    },
+    h3: {
+      fontFamily: '"Playfair Display", serif',
+      fontSize: '2.5rem',
+    },
+    h5: {
+      fontSize: '1.5rem',
+    },
+    body1: {
+      fontSize: '1.1rem',
+    },
+    body2: {
+      fontSize: '1rem',
+    },
+  },
+});
+
+const StyledPaper = styled(Paper)(({ theme }) => ({
+  marginTop: theme.spacing(8),
+  marginBottom: theme.spacing(8),
+  padding: theme.spacing(4),
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  background: theme.palette.background.paper,
+  boxShadow: '0 8px 32px 0 rgba(139, 69, 19, 0.37)',
+  borderRadius: '15px',
+  border: '1px solid rgba(218, 165, 32, 0.18)',
+}));
+
+const StyledButton = styled(Button)(({ theme }) => ({
+  margin: theme.spacing(3, 0, 2),
+  background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
+  borderRadius: 3,
+  border: 0,
+  color: 'white',
+  height: 48,
+  padding: '0 30px',
+  boxShadow: `0 3px 5px 2px ${theme.palette.primary.main}33`,
+}));
 
 // List of Indian states for the dropdown
 const states = [
@@ -41,7 +125,7 @@ function FormFill() {
           setCanSellCoins(userData.canSellCoins || false);
           setCanSellNotes(userData.canSellNotes || false);
           setFormFilled(true);
-          navigate('/myprofile'); // Redirect to /myprofile if data exists
+          navigate('/myprofile');
         }
       }
     };
@@ -49,25 +133,9 @@ function FormFill() {
     fetchUserData();
   }, [navigate]);
 
-  const handleUserTypeChange = (e) => {
-    setUserType(e.target.value);
-  };
-
-  const handleStateChange = (e) => {
-    setState(e.target.value);
-  };
-
-  const handleCheckboxChange = (e) => {
-    const { name, checked } = e.target;
-    if (name === 'canSellStamps') setCanSellStamps(checked);
-    if (name === 'canSellCoins') setCanSellCoins(checked);
-    if (name === 'canSellNotes') setCanSellNotes(checked);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Prepare data for Firestore
     const formData = {
       name,
       userType,
@@ -80,12 +148,11 @@ function FormFill() {
     };
 
     try {
-      // Add or update form data in Firestore
       const user = auth.currentUser;
       if (user) {
         await db.collection('userDetails').doc(user.uid).set(formData, { merge: true });
         alert('Form submitted successfully!');
-        navigate('/myprofile'); // Redirect to /myprofile after successful submission
+        navigate('/myprofile');
       }
     } catch (error) {
       console.error("Error submitting form: ", error);
@@ -93,105 +160,127 @@ function FormFill() {
     }
   };
 
-  // Redirect to profile if form is already filled
   if (formFilled) {
-    return <div className="text-center text-gray-700">Redirecting to your profile...</div>; // This message can be customized or replaced with a loading spinner
+    return (
+      <ThemeProvider theme={theme}>
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
+          <Box
+            sx={{
+              marginTop: 8,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
+            <Typography component="h1" variant="h5">
+              Redirecting to your profile...
+            </Typography>
+          </Box>
+        </Container>
+      </ThemeProvider>
+    );
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen" style={{ backgroundColor: '#FDF5E6' }}>
-      <form onSubmit={handleSubmit} className="w-full max-w-lg p-8 rounded-lg shadow-lg border border-gray-300" style={{ backgroundColor: '#FAEBD7' }}>
-        <h2 className="text-2xl font-bold mb-6" style={{ color: '#8B4513' }}>Fill in your details</h2>
-
-        <label className="block mb-4">
-          <span className="text-gray-700">Name</span>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="block w-full mt-1 border-gray-300 rounded-md shadow-sm"
-            required
-          />
-        </label>
-
-        <label className="block mb-4">
-          <span className="text-gray-700">Experience</span>
-          <input
-            type="text"
-            value={experience}
-            onChange={(e) => setExperience(e.target.value)}
-            className="block w-full mt-1 border-gray-300 rounded-md shadow-sm"
-          />
-        </label>
-
-        <label className="block mb-4">
-          <span className="text-gray-700">State</span>
-          <select 
-            value={state} 
-            onChange={handleStateChange} 
-            className="block w-full mt-1 border-gray-300 rounded-md shadow-sm"
-            required
-          >
-            <option value="">Select State</option>
-            {states.map((state, index) => (
-              <option key={index} value={state}>{state}</option>
-            ))}
-          </select>
-        </label>
-
-        <label className="block mb-4">
-          <span className="text-gray-700">Contact Details</span>
-          <input
-            type="text"
-            value={contactDetails}
-            onChange={(e) => setContactDetails(e.target.value)}
-            className="block w-full mt-1 border-gray-300 rounded-md shadow-sm"
-          />
-        </label>
-
-        <fieldset className="mb-6">
-          <legend className="text-gray-700 font-semibold mb-2">Items you can sell</legend>
-          <label className="block mb-2">
-            <input
-              type="checkbox"
-              name="canSellStamps"
-              checked={canSellStamps}
-              onChange={handleCheckboxChange}
-              className="mr-2"
-            />
-            Stamps
-          </label>
-          <label className="block mb-2">
-            <input
-              type="checkbox"
-              name="canSellCoins"
-              checked={canSellCoins}
-              onChange={handleCheckboxChange}
-              className="mr-2"
-            />
-            Coins
-          </label>
-          <label className="block mb-2">
-            <input
-              type="checkbox"
-              name="canSellNotes"
-              checked={canSellNotes}
-              onChange={handleCheckboxChange}
-              className="mr-2"
-            />
-            Notes
-          </label>
-        </fieldset>
-
-        <button
-          type="submit"
-          className="w-full py-2 px-4 rounded-md shadow-sm"
-          style={{ backgroundColor: '#8B4513', color: '#FAEBD7' }}
+    <ThemeProvider theme={theme}>
+      <Container component="main" maxWidth="sm">
+        <CssBaseline />
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
         >
-          Submit
-        </button>
-      </form>
-    </div>
+          <StyledPaper>
+            <Typography component="h1" variant="h4" sx={{ fontFamily: '"Playfair Display", serif', marginBottom: 4 }}>
+              Fill in your details
+            </Typography>
+            <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
+              <Grid container spacing={3}>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="name"
+                    label="Name"
+                    name="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    id="experience"
+                    label="Experience"
+                    name="experience"
+                    value={experience}
+                    onChange={(e) => setExperience(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <FormControl fullWidth>
+                    <InputLabel id="state-label">State</InputLabel>
+                    <Select
+                      labelId="state-label"
+                      id="state"
+                      value={state}
+                      label="State"
+                      onChange={(e) => setState(e.target.value)}
+                      required
+                    >
+                      <MenuItem value="">
+                        <em>Select State</em>
+                      </MenuItem>
+                      {states.map((state, index) => (
+                        <MenuItem key={index} value={state}>{state}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    id="contactDetails"
+                    label="Contact Details"
+                    name="contactDetails"
+                    value={contactDetails}
+                    onChange={(e) => setContactDetails(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant="subtitle1" gutterBottom>
+                    Items you can sell
+                  </Typography>
+                  <FormGroup>
+                    <FormControlLabel
+                      control={<Checkbox checked={canSellStamps} onChange={(e) => setCanSellStamps(e.target.checked)} name="canSellStamps" />}
+                      label="Stamps"
+                    />
+                    <FormControlLabel
+                      control={<Checkbox checked={canSellCoins} onChange={(e) => setCanSellCoins(e.target.checked)} name="canSellCoins" />}
+                      label="Coins"
+                    />
+                    <FormControlLabel
+                      control={<Checkbox checked={canSellNotes} onChange={(e) => setCanSellNotes(e.target.checked)} name="canSellNotes" />}
+                      label="Notes"
+                    />
+                  </FormGroup>
+                </Grid>
+              </Grid>
+              <StyledButton
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Submit
+              </StyledButton>
+            </Box>
+          </StyledPaper>
+        </motion.div>
+      </Container>
+    </ThemeProvider>
   );
 }
 

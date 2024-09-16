@@ -8,7 +8,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import PhilatelicItemUpload from './pages/Upload';
 import FormFill from './pages/FormFill';
-import { Login } from '@mui/icons-material';
+import Login from './pages/Login';
 
 // Initialize Firebase
 const firebaseConfig = {

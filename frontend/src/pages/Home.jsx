@@ -106,78 +106,7 @@ const FeatureCard = ({ title, description, icon: Icon }) => (
   </motion.div>
 );
 
-const Header = () => (
-  <motion.div
-    initial={{ opacity: 0, y: -50 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.5 }}
-  >
-    <AppBar position="static" color="primary" elevation={0}>
-      <Toolbar sx={{ justifyContent: 'space-between' }}>
-        <Typography variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
-          National Philately Community
-        </Typography>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Button color="inherit" sx={{ mr: 2 }}>Catalog</Button>
-          <Button color="inherit" sx={{ mr: 2 }}>Community</Button>
-          <Button color="inherit" sx={{ mr: 2 }}>Events</Button>
-          <Search sx={{ mr: 2 }} />
-          <Notifications sx={{ mr: 2 }} />
-          <AccountCircle />
-        </Box>
-      </Toolbar>
-    </AppBar>
-  </motion.div>
-);
 
-const Footer = () => (
-  <motion.div
-    initial={{ opacity: 0, y: 50 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.5 }}
-  >
-    <Box
-      component="footer"
-      sx={{
-        bgcolor: 'background.paper',
-        py: 6,
-        borderTop: '2px dashed',
-        borderColor: 'primary.main',
-      }}
-    >
-      <Container maxWidth="lg">
-        <Grid container spacing={4}>
-          <Grid item xs={12} sm={4}>
-            <Typography variant="h6" color="primary" gutterBottom>
-              About Us
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              The National Philately Community is dedicated to bringing together stamp collectors from across India, providing a platform to discover, connect, and share our rich postal heritage.
-            </Typography>
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <Typography variant="h6" color="primary" gutterBottom>
-              Quick Links
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Home | Catalog | Community Forum | Events | Contact Us
-            </Typography>
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <Typography variant="h6" color="primary" gutterBottom>
-              Contact Us
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Email: support@philatelycommunity.in
-              <br />
-              Phone: +91 123 456 7890
-            </Typography>
-          </Grid>
-        </Grid>
-      </Container>
-    </Box>
-  </motion.div>
-);
 
 const BodyContent = () => (
   <>
@@ -338,7 +267,6 @@ const Home = () => {
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ flexGrow: 1, bgcolor: 'background.default', minHeight: '100vh' }}>
-        <Header />
         <BodyContent />
         <Footer />
       </Box>
