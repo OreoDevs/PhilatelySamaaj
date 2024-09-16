@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { format, parseISO } from 'date-fns';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import {
   Button,
   Modal,
@@ -9,8 +10,53 @@ import {
   ListItem,
   ListItemText,
   Snackbar,
-  Alert
+  Alert,
+  Card,
+  CardContent,
+  Grid,
+  Paper
 } from '@mui/material';
+import { CalendarMonth, EventNote, Payment } from '@mui/icons-material';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#8B4513', // Saddle Brown
+    },
+    secondary: {
+      main: '#DAA520', // Goldenrod
+    },
+    background: {
+      default: '#FDF5E6', // Old Lace
+      paper: '#FAEBD7', // Antique White
+    },
+  },
+  typography: {
+    fontFamily: '"Courier New", Courier, monospace',
+    fontSize: 16,
+    h1: {
+      fontFamily: '"Playfair Display", serif',
+      fontSize: '3.5rem',
+    },
+    h2: {
+      fontFamily: '"Playfair Display", serif',
+      fontSize: '3rem',
+    },
+    h3: {
+      fontFamily: '"Playfair Display", serif',
+      fontSize: '2.5rem',
+    },
+    h5: {
+      fontSize: '1.5rem',
+    },
+    body1: {
+      fontSize: '1.1rem',
+    },
+    body2: {
+      fontSize: '1rem',
+    },
+  },
+});
 
 const EventCalendar = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -24,35 +70,40 @@ const EventCalendar = () => {
       name: "Delhi Stamp Exhibition", 
       date: "2024-10-15", 
       description: "Annual exhibition featuring rare Indian stamps",
-      price: 500
+      price: 500,
+      location: "Pragati Maidan, New Delhi"
     },
     { 
       id: 2, 
       name: "Mumbai Collectors' Fair", 
       date: "2024-11-05", 
       description: "Largest stamp and coin collection event in Western India",
-      price: 600
+      price: 600,
+      location: "Bandra Kurla Complex, Mumbai"
     },
     { 
       id: 3,  
       name: "Kolkata Philatelic Symposium",  
       date: "2024-09-20",  
       description: "Academic conference on Indian postal history", 
-      price: 300 
+      price: 300,
+      location: "Science City, Kolkata"
     }, 
     {  
       id: 4,  
       name: "Bangalore Stamp Workshop",  
       date: "2024-08-10",  
       description: "Hands-on workshop for beginners in stamp collecting", 
-      price: 200 
+      price: 200,
+      location: "Bengaluru Palace Grounds"
     }, 
     {  
       id: 5,  
       name: "Chennai Rare Stamps Auction",  
       date: "2024-12-03",  
       description: "Auction of valuable and rare Indian stamps", 
-      price: 1000 
+      price: 1000,
+      location: "Chennai Trade Centre"
     }, 
   ]; 
  

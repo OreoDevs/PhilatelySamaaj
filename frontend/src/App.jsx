@@ -9,10 +9,9 @@ import Footer from './components/Footer';
 import PhilatelicItemUpload from './pages/Upload';
 import FormFill from './pages/FormFill';
 import Events from './pages/Events';
-
-import EventCalendar from './EventCalendar';
+import EventCalendar from './pages/EventCalendar';
 import Login from './pages/Login';
-import PhilatelicAccount from './PhilatelicAccount';
+import PhilatelicAccount from './pages/PhilatelicAccount';
 
 // Initialize Firebase
 const firebaseConfig = {
