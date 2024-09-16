@@ -9,7 +9,6 @@ import Footer from './components/Footer';
 import PhilatelicItemUpload from './pages/Upload';
 import FormFill from './pages/FormFill';
 import Events from './Events';
-
 import EventCalendar from './EventCalendar';
 import Login from './pages/Login';
 
