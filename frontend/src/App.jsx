@@ -13,6 +13,10 @@ import EventCalendar from './pages/EventCalender';
 import Login from './pages/Login';
 import PhilatelicAccount from './pages/PhilatelicAccount';
 import PhilatelicItemCatalog from './pages/PhilatelicItemCatalog';
+import MyProfile from './pages/myProfile';
+import PhilatelistForum from './pages/Forum';
+import AllPostsView from './pages/Posts';
+import PostsPage from './pages/Posts';
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -44,6 +48,9 @@ function App() {
         <Route path="/cal" element={<EventCalendar />} />
         <Route path="/pda" element={<PhilatelicAccount />} />
         <Route path="/catalog" element={<PhilatelicItemCatalog />} />
+        <Route path="/myprofile" element={<MyProfile />} />
+        <Route path="/forum" element={<PhilatelistForum />} />
+        <Route path="/posts" element={<PostsPage />} />
       </Routes>
       <Footer />
     </Router>

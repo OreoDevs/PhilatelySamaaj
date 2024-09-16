@@ -1,56 +1,118 @@
 import React, { useState, useEffect } from 'react';
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/firestore';
 import { useNavigate } from 'react-router-dom';
+import { auth, db } from '../firebase/firebaseConfig';
+import { 
+  Box, 
+  Typography, 
+  Container, 
+  CssBaseline,
+  Paper,
+  Grid,
+  Button
+} from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { doc, getDoc } from 'firebase/firestore';
+
+const StyledPaper = styled(Paper)(({ theme }) => ({
+  marginTop: theme.spacing(8),
+  marginBottom: theme.spacing(8),
+  padding: theme.spacing(4),
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  background: theme.palette.background.paper,
+  boxShadow: '0 8px 32px 0 rgba(139, 69, 19, 0.37)',
+  borderRadius: '15px',
+  border: '1px solid rgba(218, 165, 32, 0.18)',
+}));
 
 function MyProfile() {
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState({});
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const user = firebase.auth().currentUser;
+      const user = auth.currentUser;
       if (user) {
-        const userDoc = await firebase.firestore().collection('userDetails').doc(user.uid).get();
-        if (userDoc.exists) {
-          setUserData(userDoc.data());
-        } else {
-          navigate('/fill'); // Redirect to /fill if no user data exists
+        try {
+          const userDocRef = doc(db, 'userDetails', user.uid);
+          const userDoc = await getDoc(userDocRef);
+          if (userDoc.exists()) {
+            setUserData(userDoc.data());
+          }
+        } catch (error) {
+          console.error("Error fetching user data: ", error);
         }
-      } else {
-        navigate('/login'); // Redirect to login if not authenticated
       }
+      setLoading(false);
     };
-
     fetchUserData();
-  }, [navigate]);
+  }, []);
 
-  if (!userData) {
-    return <div>Loading...</div>; // Loading state can be improved
+  if (loading) {
+    return (
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Typography component="h1" variant="h5">
+            Loading profile...
+          </Typography>
+        </Box>
+      </Container>
+    );
   }
 
+  const { name, userType, state, experience, contactDetails, canSellStamps, canSellCoins, canSellNotes } = userData;
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-      <div className="w-full max-w-lg bg-white p-8 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-bold mb-6">My Profile</h2>
-        <p><strong>Name:</strong> {userData.name}</p>
-        <p><strong>Type of User:</strong> {userData.userType}</p>
-        <p><strong>State:</strong> {userData.state}</p>
-        {userData.userType === 'Farmer' && (
-          <>
-            <p><strong>Crops:</strong> {userData.crops.join(', ')}</p>
-            <p><strong>Fruits:</strong> {userData.fruits.join(', ')}</p>
-            <p><strong>Vegetables:</strong> {userData.vegetables.join(', ')}</p>
-          </>
-        )}
-        {userData.userType !== 'Farmer' && (
-          <p><strong>Other Details:</strong> {userData.otherDetails}</p>
-        )}
-        {userData.profilePicUrl && (
-          <img src={userData.profilePicUrl} alt="Profile Pic" className="mt-4 w-32 h-32 object-cover rounded-full" />
-        )}
-      </div>
-    </div>
+    <Container component="main" maxWidth="md">
+      <CssBaseline />
+      <StyledPaper>
+        <Typography component="h1" variant="h4" sx={{ marginBottom: 4 }}>
+          Your Profile
+        </Typography>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Typography variant="h6">Name: {name}</Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="h6">User Type: {userType}</Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="h6">State: {state}</Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="h6">Experience: {experience}</Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="h6">Contact Details: {contactDetails}</Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="h6">Items you can sell:</Typography>
+            <ul>
+              {canSellStamps && <li>Stamps</li>}
+              {canSellCoins && <li>Coins</li>}
+              {canSellNotes && <li>Notes</li>}
+            </ul>
+          </Grid>
+        </Grid>
+        <Button
+          variant="contained"
+          sx={{ mt: 3 }}
+          onClick={() => navigate('/editProfile')}
+        >
+          Edit Profile
+        </Button>
+      </StyledPaper>
+    </Container>
   );
 }
 

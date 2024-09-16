@@ -21,6 +21,7 @@ import {
 import { styled } from '@mui/material/styles';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { motion } from 'framer-motion';
+import {doc, getDoc, setDoc} from 'firebase/firestore';
 
 const theme = createTheme({
   palette: {
@@ -111,25 +112,25 @@ function FormFill() {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const user = auth.currentUser;
-      if (user) {
-        const userDoc = await db.collection('userDetails').doc(user.uid).get();
-        if (userDoc.exists) {
-          const userData = userDoc.data();
-          setUserType(userData.userType || '');
-          setState(userData.state || '');
-          setName(userData.name || '');
-          setExperience(userData.experience || '');
-          setContactDetails(userData.contactDetails || '');
-          setCanSellStamps(userData.canSellStamps || false);
-          setCanSellCoins(userData.canSellCoins || false);
-          setCanSellNotes(userData.canSellNotes || false);
-          setFormFilled(true);
-          navigate('/myprofile');
-        }
-      }
-    };
-
+  const user = auth.currentUser;
+  if (user) {
+    const userDocRef = doc(db, 'userDetails', user.uid);
+    const userDoc = await getDoc(userDocRef);
+    if (userDoc.exists()) {
+      const userData = userDoc.data();
+      setUserType(userData.userType || '');
+      setState(userData.state || '');
+      setName(userData.name || '');
+      setExperience(userData.experience || '');
+      setContactDetails(userData.contactDetails || '');
+      setCanSellStamps(userData.canSellStamps || false);
+      setCanSellCoins(userData.canSellCoins || false);
+      setCanSellNotes(userData.canSellNotes || false);
+      setFormFilled(true);
+      navigate('/myprofile');
+    }
+  }
+};
     fetchUserData();
   }, [navigate]);
 
@@ -150,7 +151,8 @@ function FormFill() {
     try {
       const user = auth.currentUser;
       if (user) {
-        await db.collection('userDetails').doc(user.uid).set(formData, { merge: true });
+        const userDocRef = doc(db, 'userDetails', user.uid);
+        await setDoc(userDocRef, formData, { merge: true });
         alert('Form submitted successfully!');
         navigate('/myprofile');
       }
