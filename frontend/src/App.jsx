@@ -8,8 +8,8 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import PhilatelicItemUpload from './pages/Upload';
 import FormFill from './pages/FormFill';
-import Events from './pages/Events';
-import EventCalendar from './pages/EventCalendar';
+import PhilatelicEventsPage from './pages/Events';
+import EventCalendar from './pages/EventCalender';
 import Login from './pages/Login';
 import PhilatelicAccount from './pages/PhilatelicAccount';
 
@@ -39,7 +39,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/upload" element={<PhilatelicItemUpload />} />
         <Route path="/fill" element={<FormFill />} />
-        <Route path="/events" element={<Events />} />
+        <Route path="/events" element={<PhilatelicEventsPage />} />
         <Route path="/cal" element={<EventCalendar />} />
         <Route path="/pda" element={<PhilatelicAccount />} />
       </Routes>
