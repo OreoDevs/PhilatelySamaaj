@@ -1,21 +1,44 @@
-import {React,useState, useEffect} from 'react';
-import { BrowserRouter as Router, Routes, Route, BrowserRouter } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
 import Home from './pages/Home';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import PhilatelicItemUpload from './pages/Upload';
+import FormFill from './pages/FormFill';
+import { Login } from '@mui/icons-material';
 
+// Initialize Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyD7KLhZMgXO1Ra7Qvhk-9ObxigcqLEIgPM",
+  authDomain: "philatelysamaaj.firebaseapp.com",
+  projectId: "philatelysamaaj",
+  storageBucket: "philatelysamaaj.appspot.com",
+  messagingSenderId: "720565385019",
+  appId: "1:720565385019:web:cfa6e1d57f6504a90da91e",
+  measurementId: "G-KX54ZL91HH"
+};
 
+initializeApp(firebaseConfig);
 
+const auth = getAuth();
 
 function App() {
+  const [user] = useAuthState(auth);
+
   return (
-
-    <BrowserRouter>
-          <Routes>
-             <Route path="/" element={<Home />} />
-
-          </Routes>
-        </BrowserRouter>
+    <Router>
+      <Header />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/upload" element={<PhilatelicItemUpload />} />
+        <Route path="/fill" element={<FormFill />} />
+      </Routes>
+      <Footer />
+    </Router>
   );
 }
 

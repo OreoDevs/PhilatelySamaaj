@@ -1,3 +1,14 @@
 https://www.data.gov.in/catalog/list-philatelic-bureaux
 https://www.data.gov.in/resource/circle-wise-details-revenue-earned-through-my-stamp-scheme-effect-2014-15-2017-18-ministry
 https://www.data.gov.in/catalog/list-post-offices-having-philatelic-counters
+
+
+import MyProfile from './pages/myProfile';
+import FormFill from './pages/FormFill';
+import ProductUpload from './pages/Upload';
+import Events from './pages/Events';
+
+             <Route path="/profile" element={<MyProfile />} />
+             <Route path="/fill" element={<FormFill />} />
+             <Route path="/events" element={<Events />} />
+             <Route path="/upload" element={<ProductUpload />} />
