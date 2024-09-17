@@ -20,6 +20,10 @@ import StampAuction from './pages/CurrentAuction';
 import AuctionManager from './components/AuctionManager';
 import PhilatelicMarketplace from './pages/PhilatelicMarketplace';
 import StampDetailPage from './components/StampDetailPage';
+import MyProfile from './pages/myProfile';
+import PhilatelistForum from './pages/Forum';
+import AllPostsView from './pages/Posts';
+import PostsPage from './pages/Posts';
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -57,6 +61,9 @@ function App() {
         <Route path="/auction" element={<AuctionManager />} />
         <Route path="/buy" element={<PhilatelicMarketplace />} />
         <Route path="/stamp/:id" element={<StampDetailPage />} />
+        <Route path="/myprofile" element={<MyProfile />} />
+        <Route path="/forum" element={<PhilatelistForum />} />
+        <Route path="/posts" element={<PostsPage />} />
       </Routes>
       <Footer />
     </Router>
