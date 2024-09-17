@@ -13,6 +13,13 @@ import EventCalendar from './pages/EventCalender';
 import Login from './pages/Login';
 import PhilatelicAccount from './pages/PhilatelicAccount';
 import PhilatelicItemCatalog from './pages/PhilatelicItemCatalog';
+import Image3DViewer from './components/Image3DViewer';
+import Notification from './components/Notification';
+import AIStampDetector from './pages/AIStampDetector';
+import StampAuction from './pages/CurrentAuction';
+import AuctionManager from './components/AuctionManager';
+import PhilatelicMarketplace from './pages/PhilatelicMarketplace';
+import StampDetailPage from './components/StampDetailPage';
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -44,6 +51,12 @@ function App() {
         <Route path="/cal" element={<EventCalendar />} />
         <Route path="/pda" element={<PhilatelicAccount />} />
         <Route path="/catalog" element={<PhilatelicItemCatalog />} />
+        <Route path="/imgv" element={<Image3DViewer imageUrl="/Stamp1.png"/>} />
+        <Route path="/noti" element={<Notification />} />
+        <Route path="/ai" element={<AIStampDetector />} />
+        <Route path="/auction" element={<AuctionManager />} />
+        <Route path="/buy" element={<PhilatelicMarketplace />} />
+        <Route path="/stamp/:id" element={<StampDetailPage />} />
       </Routes>
       <Footer />
     </Router>
