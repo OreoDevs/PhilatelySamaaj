@@ -24,6 +24,7 @@ import MyProfile from './pages/myProfile';
 import PhilatelistForum from './pages/Forum';
 import AllPostsView from './pages/Posts';
 import PostsPage from './pages/Posts';
+import IndianPostcard3DViewer from './components/IndianPostcard3DViewer';
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -55,7 +56,7 @@ function App() {
         <Route path="/cal" element={<EventCalendar />} />
         <Route path="/pda" element={<PhilatelicAccount />} />
         <Route path="/catalog" element={<PhilatelicItemCatalog />} />
-        <Route path="/imgv" element={<Image3DViewer imageUrl="/Stamp1.png"/>} />
+        <Route path="/imgv" element={<IndianPostcard3DViewer/>} />
         <Route path="/noti" element={<Notification />} />
         <Route path="/ai" element={<AIStampDetector />} />
         <Route path="/auction" element={<AuctionManager />} />

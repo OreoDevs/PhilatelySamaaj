@@ -50,7 +50,7 @@ const Notification = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ position: 'fixed', top: 16, right: 16 }}>
+      <Box sx={{ position: 'relative' }}>
         <IconButton onClick={handleClick} size="large">
           <StyledBadge badgeContent={notifications.length} color="secondary">
             <NotificationsIcon color="primary" />

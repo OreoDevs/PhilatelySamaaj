@@ -22,6 +22,7 @@ import LocalFloristIcon from '@mui/icons-material/LocalFlorist';
 import { Search, Notifications, AccountCircle } from '@mui/icons-material';
 import { Link as RouterLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import Notification from './Notification';
 
 // Define the theme
 const theme = createTheme({
@@ -275,7 +276,7 @@ const Header = () => {
                 </Button>
               </div>
             )}
-
+              <Notification />
             <IconButton color="inherit" component={RouterLink} to="/cart" sx={{ ml: 2 }}>
               <ShoppingCartIcon />
             </IconButton>
